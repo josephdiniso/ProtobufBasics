@@ -1,0 +1,45 @@
+syntax = "proto2";
+
+// Package definition is sued to prevent naming conflicts between different
+// projects
+package tutorial;
+
+message Person {
+    /*
+    The = 1, = 2, markers on each element identify the unique "tag" that field
+    uses in binary encoding
+
+    Tags 1-15 use one fewer byte than higher numbers so save higher numbers 
+    for less commonly used elements
+    */
+
+    // Requires must exist
+    required string name = 1;
+    required int32 id = 2;
+    // Optional If an optional value isn't set, a default is used
+    optional string email = 3;
+
+    enum PhoneType {
+        MOBILE = 0;
+        HOME = 1;
+        WORK = 2;
+    }
+
+    message PhoneNumber {
+        required string number = 1;
+        // Example of default value
+        optional PhoneType type = 2 [default = HOME];
+    }
+
+    repeated PhoneNumber phones = 4;
+}
+
+message AddressBook {
+    repeated Person people = 1;
+}
+
+/*
+To compile the protocol buffer:
+
+protoc -I=$SRC_DIR --python_out=$DST_DIR $SRC_DIR/addressbook.proto
+*/
